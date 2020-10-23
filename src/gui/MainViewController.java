@@ -15,81 +15,83 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
+import model.service.DepartamentoService;
 
 public class MainViewController implements Initializable {
 
 	@FXML
 	private MenuItem menuItemVendedor;
-	
+
 	@FXML
 	private MenuItem menuItemDepartamento;
-	
+
 	@FXML
 	private MenuItem menuItemSobre;
-	
+
 	@FXML
 	public void onMenuItemVendedorAction() {
 		System.out.println("onMenuItemVendedorAction");
 	}
-	
+
 	@FXML
 	public void onMenuItemDepartamentoAction() {
-		System.out.println("onMenuItemDepartamentoAction");
+		loadView2("/gui/ListaDepartamentos.fxml");
 	}
-	
+
 	@FXML
 	public void onMenuItemSobretAction() {
 		loadView("/gui/Sobre.fxml");
 	}
-	
-	
+
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
 
 	}
-	
+
 	private synchronized void loadView(String nomeAbsoluto) {
-		
+
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource(nomeAbsoluto));
-			VBox newVBox = loader.load();
-			
+			VBox novoVBox = loader.load();
+
 			Scene mainScene = Main.getMainScene();
 			VBox mainVBox = (VBox) ((ScrollPane) mainScene.getRoot()).getContent();
-			
+
 			Node mainMenu = mainVBox.getChildren().get(0);
 			mainVBox.getChildren().clear();
 			mainVBox.getChildren().add(mainMenu);
-			mainVBox.getChildren().addAll(newVBox.getChildren());
-		
-			
+			mainVBox.getChildren().addAll(novoVBox.getChildren());
+
 		} catch (IOException e) {
 			Alerts.showAlert("IOException", "Erro ao carregar página", e.getMessage(), AlertType.ERROR);
-			
+
 		}
-		
+
+	}
+
+	private synchronized void loadView2(String nomeAbsoluto) {
+
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource(nomeAbsoluto));
+			VBox novoVBox = loader.load();
+
+			Scene mainScene = Main.getMainScene();
+			VBox mainVBox = (VBox) ((ScrollPane) mainScene.getRoot()).getContent();
+
+			Node mainMenu = mainVBox.getChildren().get(0);
+			mainVBox.getChildren().clear();
+			mainVBox.getChildren().add(mainMenu);
+			mainVBox.getChildren().addAll(novoVBox.getChildren());
+
+			ListaDepartamentoController controller = loader.getController();
+			controller.setDepartamentoService(new DepartamentoService());
+			controller.updateTableView();
+
+		} catch (IOException e) {
+			Alerts.showAlert("IOException", "Erro ao carregar página", e.getMessage(), AlertType.ERROR);
+
+		}
+
 	}
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
