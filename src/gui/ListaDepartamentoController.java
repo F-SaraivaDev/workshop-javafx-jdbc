@@ -14,7 +14,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-import model.entities.Departamento;
+import model.entidade.Departamento;
 import model.service.DepartamentoService;
 
 public class ListaDepartamentoController implements Initializable {
