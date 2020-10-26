@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import application.Main;
+import gui.listeners.DataChangeListener;
 import gui.util.Alerts;
 import gui.util.Utils;
 import javafx.collections.FXCollections;
@@ -26,7 +27,7 @@ import javafx.stage.Stage;
 import model.entidade.Departamento;
 import model.service.DepartamentoService;
 
-public class ListaDepartamentoController implements Initializable {
+public class ListaDepartamentoController implements Initializable, DataChangeListener {
 	
 	private DepartamentoService service;
 	
@@ -47,7 +48,8 @@ public class ListaDepartamentoController implements Initializable {
 	@FXML
 	public void onBtNovoAction(ActionEvent evento) {
 		Stage parentStage = Utils.currentStage(evento);
-		criarDialogoForm("/gui/DepartamentoForm.fxml", parentStage);
+		Departamento obj = new Departamento();
+		criarDialogoForm(obj,"/gui/DepartamentoForm.fxml", parentStage);
 	}
 	
 	public void setDepartamentoService(DepartamentoService service){
@@ -78,10 +80,16 @@ public class ListaDepartamentoController implements Initializable {
 		tableViewDepartamento.setItems(obsList);
 	}
 	
-	private void criarDialogoForm(String nomeAbsoluto, Stage parentStage) {
+	private void criarDialogoForm(Departamento obj, String nomeAbsoluto, Stage parentStage) {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource(nomeAbsoluto));
 			Pane pane = loader.load();
+			
+			DepartamentoFomController controller = loader.getController();
+			controller.setDeparmento(obj);
+			controller.setDepartamentoService(new DepartamentoService());
+			controller.subscribeDataChangeListener(this);
+			controller.atualizarDadosForm();
 			
 			Stage dialogStage = new Stage();
 			dialogStage.setTitle("Informe os dados do Departamento");
@@ -94,6 +102,11 @@ public class ListaDepartamentoController implements Initializable {
 		} catch (IOException e) {
 			Alerts.showAlert("IO Exception", "Erro ao carregar a página", e.getMessage(), AlertType.ERROR);
 		}
+	}
+
+	@Override
+	public void onDataChanged() {
+         updateTableView();		
 	}
 }
 

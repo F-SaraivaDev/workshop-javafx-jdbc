@@ -16,4 +16,13 @@ public class DepartamentoService {
 	List<Departamento> lista = new ArrayList<>();
 	    return dao.findAll();
 	}
+	
+	public void salvarOuAtualizar(Departamento obj) {
+		if(obj.getId() == null) {
+			dao.insert(obj);
+		
+		}else {
+			dao.update(obj);
+		}
+	}
 }
