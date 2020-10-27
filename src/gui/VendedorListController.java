@@ -1,5 +1,6 @@
 package gui;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.Date;
 import java.util.List;
@@ -16,7 +17,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -24,6 +27,8 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.Pane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.entidade.Vendedor;
 import model.service.VendedorService;
@@ -103,11 +108,11 @@ public class VendedorListController implements Initializable, DataChangeListener
 	}
     
 	private void criarDialogoForm(Vendedor obj, String nomeAbsoluto, Stage parentStage) {
-	/*	try {
+		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource(nomeAbsoluto));
 			Pane pane = loader.load();
 
-			VendedorFomController controller = loader.getController();
+			VendedorFormController controller = loader.getController();
 			controller.setDeparmento(obj);
 			controller.setVendedorService(new VendedorService());
 			controller.subscribeDataChangeListener(this);
@@ -123,7 +128,7 @@ public class VendedorListController implements Initializable, DataChangeListener
 
 		} catch (IOException e) {
 			Alerts.showAlert("IO Exception", "Erro ao carregar a página", e.getMessage(), AlertType.ERROR);
-		}*/
+		}
 	}
 
 	@Override
