@@ -32,7 +32,7 @@ import javafx.stage.Stage;
 import model.entidade.Departamento;
 import model.service.DepartamentoService;
 
-public class ListaDepartamentoController implements Initializable, DataChangeListener {
+public class DepartamentoListController implements Initializable, DataChangeListener {
 
 	private DepartamentoService service;
 
