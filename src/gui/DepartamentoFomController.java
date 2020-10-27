@@ -3,7 +3,9 @@ package gui;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 import com.mysql.jdbc.UpdatableResultSet;
 
@@ -20,6 +22,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import model.entidade.Departamento;
+import model.exceptions.ValidacaoException;
 import model.service.DepartamentoService;
 
 public class DepartamentoFomController implements Initializable {
@@ -27,7 +30,7 @@ public class DepartamentoFomController implements Initializable {
 	private Departamento entidade;
 
 	private DepartamentoService service;
-	
+
 	private List<DataChangeListener> dataChangeListeners = new ArrayList<>();
 
 	@FXML
@@ -52,7 +55,7 @@ public class DepartamentoFomController implements Initializable {
 	public void setDepartamentoService(DepartamentoService service) {
 		this.service = service;
 	}
-	
+
 	public void subscribeDataChangeListener(DataChangeListener listener) {
 		dataChangeListeners.add(listener);
 	}
@@ -73,7 +76,10 @@ public class DepartamentoFomController implements Initializable {
 			notifyDataChangeListeners();
 			Utils.currentStage(evento).close();
 
-		} catch (DbException e) {
+		} catch(ValidacaoException e){
+			setMensagemErro(e.getErros());
+			
+     	}catch (DbException e) {
 			Alerts.showAlert("Erro ao salvar o objeto", null, e.getMessage(), AlertType.ERROR);
 		}
 	}
@@ -87,8 +93,19 @@ public class DepartamentoFomController implements Initializable {
 	private Departamento getFormDados() {
 		Departamento obj = new Departamento();
 
+		ValidacaoException exception = new ValidacaoException("Erro de validação");
+
 		obj.setId(Utils.tryParseToInt(txtId.getText()));
+
+		if (txtNome.getText() == null || txtNome.getText().trim().equals("")) {
+			exception.addError("nome", "O campo não pode ser vazio!");
+		}
+
 		obj.setNome(txtNome.getText());
+
+		if (exception.getErros().size() > 0) {
+			throw exception;
+		}
 
 		return obj;
 	}
@@ -116,5 +133,36 @@ public class DepartamentoFomController implements Initializable {
 		txtId.setText(String.valueOf(entidade.getId()));
 		txtNome.setText(entidade.getNome());
 	}
+	
+	private void setMensagemErro(Map<String, String> erro) {
+		Set<String> campos = erro.keySet();
+		
+		if(campos.contains("nome")) {
+			labelErroNome.setText(erro.get("nome"));
+		}
+	}
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
